@@ -6,6 +6,10 @@ let _answer = "54321";
 let _activePlayer = null;
 let _playerStates = [];
 
+let HINT_NONE = 0;
+let HINT_SEMI = 1;
+let HINT_CORRECT = 2;
+
 function isCharOk(char)
 {
     return ["1", "2", "3", "4", "5"].includes(char);
@@ -16,15 +20,38 @@ function isEnterOk(state)
     return state.board[state.guessIndex].length === NUM_TILES;
 }
 
-function getPastGuessHints(guess, answer)
+function calculateHints(guess, answer)
 {
     console.assert(answer.length === NUM_TILES);
     console.assert(guess.length === answer.length);
 
-    let hints = [];
+    let answerCopy = Array.from(answer);
+    let hints = new Array(NUM_TILES);
     for (let t = 0; t < NUM_TILES; t++) {
-        
+        hints[t] = HINT_NONE;
+        if (guess[t] === answerCopy[t]) {
+            hints[t] = HINT_CORRECT;
+            answerCopy[t] = null;
+        }
     }
+
+    for (let t = 0; t < NUM_TILES; t++) {
+        if (hints[t] === HINT_CORRECT) {
+            continue;
+        }
+
+        const ind = answerCopy.indexOf(guess[t]);
+        console.log(answerCopy);
+        console.log(ind);
+        if (ind === -1) {
+            hints[t] = HINT_NONE;
+        } else {
+            hints[t] = HINT_SEMI;
+            answerCopy[ind] = null;
+        }
+    }
+
+    return hints;
 }
 
 function redraw(state)
@@ -34,20 +61,21 @@ function redraw(state)
         const str = state.board[g];
         const past = g < state.guessIndex;
         html += "<div class=\"row\">";
-        for (let t = 0; t < NUM_TILES; t++) {
-            const char = t < str.length ? str[t] : "";
-            if (past) {
-            } else {
-                html += "<div class=\"tile\">" + char + "</div>";
-            }
-            let classExtra = "";
-            if (past) {
-                classExtra = " tilePast";
-                if (char === answer[t]) {
+        if (past) {
+            const hints = calculateHints(str, _answer);
+            for (let t = 0; t < NUM_TILES; t++) {
+                let classExtra = "tilePast";
+                if (hints[t] === HINT_CORRECT) {
                     classExtra += " tileCorrect";
-                } else if (answer.includes(char)) {
-                    classExtra += " tileSemiCorrect";
+                } else if (hints[t] === HINT_SEMI) {
+                    classExtra += " tileSemi";
                 }
+                html += "<div class=\"tile " + classExtra + "\">" + str[t] + "</div>";
+            }
+        } else {
+            for (let t = 0; t < NUM_TILES; t++) {
+                const char = t < str.length ? str[t] : "";
+                html += "<div class=\"tile\">" + char + "</div>";
             }
         }
         html += "</div>";

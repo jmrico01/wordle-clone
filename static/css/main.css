@@ -27,12 +27,12 @@ html, body {
     background-color: #444;
 }
 
+.tileSemi {
+    border-color: #990;
+    background-color: #990;
+}
+
 .tileCorrect {
     border-color: #0f0;
     background-color: #0f0;
-}
-
-.tileSemiCorrect {
-    border-color: #990;
-    background-color: #990;
 }
