@@ -1,0 +1,38 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+.board {
+    display: inline-block;
+    width: 45%;
+}
+
+.tile {
+    display: inline-block;
+    width: 5vw;
+    height: 5vw;
+    margin: 4pt;
+    font-size: 2vw;
+    vertical-align: middle;
+    text-align: center;
+    color: #000;
+    border: 2pt solid #888;
+    background-color: #fff;
+}
+
+.tilePast {
+    color: #fff;
+    border-color: #444;
+    background-color: #444;
+}
+
+.tileCorrect {
+    border-color: #0f0;
+    background-color: #0f0;
+}
+
+.tileSemiCorrect {
+    border-color: #990;
+    background-color: #990;
+}
